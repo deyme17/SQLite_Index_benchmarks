@@ -17,6 +17,15 @@ class Rectangle:
     @property
     def height(self) -> float:
         return self.max_y - self.min_y
+    
+    @property
+    def area(self) -> float:
+        """Calculates the area of the rectangle."""
+        return self.width * self.height
+    
+    @property
+    def aspect_ratio(self) -> float:
+        return round(self.width / self.height, 2) if self.height else float("inf")
 
     def to_bounds(self) -> Tuple[float, float, float, float]:
         """Returns the rectangle bounds as (x_min, x_max, y_min, y_max)."""
