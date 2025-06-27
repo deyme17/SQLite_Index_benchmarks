@@ -3,49 +3,59 @@ import time
 
 
 class BenchmarkRunner:
-    def __init__(self, db_path):
+    def __init__(self, db_path: str):
         self.db_path = db_path
 
-    def run_query(self, x_min, x_max, y_min, y_max, limit=1000):
-        """        
-        Runs a benchmark query on the database.
-        Args:
-            x_min (float): Minimum x-coordinate.
-            x_max (float): Maximum x-coordinate.
-            y_min (float): Minimum y-coordinate.
-            y_max (float): Maximum y-coordinate.
-            limit (int): Maximum number of results to return.
-        Returns:
-            dict with execution time, row count, and query bounds.
-        """
-        conn, cursor = self._connect()
-
+    def run_query(self, x_min: float, x_max: float, y_min: float, y_max: float, limit: int = 1000) -> dict:
         query = """
             SELECT * FROM sgmstr 
             WHERE x > ? AND x < ? 
-                AND y > ? AND y < ?
+              AND y > ? AND y < ?
             LIMIT ?
         """
+        params = [x_min, x_max, y_min, y_max, limit]
+        return self._execute_benchmark(query, params, "basic", x_min, x_max, y_min, y_max, limit)
 
-        # start the timer (use perf_counter for more precise timing)
+    def run_intersect_query(self, x_min: float, x_max: float, y_min: float, y_max: float, limit: int = 1000) -> dict:
+        query = """
+            SELECT * FROM (
+                SELECT * FROM sgmstr WHERE x > ? AND x < ?
+                INTERSECT
+                SELECT * FROM sgmstr WHERE y > ? AND y < ?
+            )
+            LIMIT ?
+        """
+        params = [x_min, x_max, y_min, y_max, limit]
+        return self._execute_benchmark(query, params, "intersect", x_min, x_max, y_min, y_max, limit)
+
+    def _execute_benchmark(self, 
+                           query: str, 
+                           params: list, 
+                           mode: str,
+                           x_min: float, x_max: float, 
+                           y_min: float, y_max: float,
+                           limit: int) -> dict:
+        """
+        Executes a given query with timing and returns benchmark results.
+        """
+        conn, cursor = self._connect()
+
         start = time.perf_counter()
-
-        cursor.execute(query, (x_min, x_max, y_min, y_max, limit))
+        cursor.execute(query, params)
         rows = cursor.fetchall()
-
-        # end the timer
         duration = time.perf_counter() - start
 
         self._close_connection(conn)
 
         return {
+            "mode": mode,
             "x_min": x_min,
             "x_max": x_max,
             "y_min": y_min,
             "y_max": y_max,
             "limit": limit,
             "row_count": len(rows),
-            "execution_time": round(duration * 1000, 3)
+            "execution_time_ms": round(duration * 1000, 3)
         }
 
     def _connect(self):
