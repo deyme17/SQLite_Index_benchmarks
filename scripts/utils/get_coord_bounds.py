@@ -17,3 +17,7 @@ def get_coordinate_bounds(db_path: str) -> tuple[float, float, float, float]:
         return x_min, x_max, y_min, y_max
     else:
         raise ValueError("Could not determine coordinate bounds from database.")
+
+if __name__ == "__main__":
+    print(get_coordinate_bounds("db/KievRegion.db"))
+    
