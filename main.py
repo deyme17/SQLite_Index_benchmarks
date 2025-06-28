@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     for rect in generator.generate_rectangles(count=100, min_size=1000, max_size=50000):
         try:
-            result = runner.run_query(*rect.to_bounds(), limit=500)
+            result = runner.run_query(*rect.to_bounds(), repeat=20)
             saver.add_result(result)
         except Exception as e:
             print(f"Error processing rectangle {rect}: {e}")
