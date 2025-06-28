@@ -15,4 +15,4 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"Error processing rectangle {rect}: {e}")
 
-    saver.save()
+    saver.save_as_csv()
