@@ -1,10 +1,10 @@
 from scripts.benchmark_runner import BenchmarkRunner
 from scripts.rectangle_generator import RectangleGenerator
 from scripts.results_saver import ResultsSaver
-from scripts.utils.settings import X_MAX_GLOBAL, X_MIN_GLOBAL, Y_MAX_GLOBAL, Y_MIN_GLOBAL
+from scripts.utils.settings import X_MAX_GLOBAL, X_MIN_GLOBAL, Y_MAX_GLOBAL, Y_MIN_GLOBAL, ORIGINAL_DB
 
 if __name__ == "__main__":
-    runner = BenchmarkRunner("db/KievRegion.db")
+    runner = BenchmarkRunner(ORIGINAL_DB)
     generator = RectangleGenerator((X_MIN_GLOBAL, X_MAX_GLOBAL), (Y_MIN_GLOBAL, Y_MAX_GLOBAL))
     saver = ResultsSaver()
 
