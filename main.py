@@ -1,18 +1,21 @@
 from scripts.benchmark_runner import BenchmarkRunner
 from scripts.rectangle_generator import RectangleGenerator
 from scripts.results_saver import ResultsSaver
-from scripts.utils.settings import X_MAX_GLOBAL, X_MIN_GLOBAL, Y_MAX_GLOBAL, Y_MIN_GLOBAL, ORIGINAL_DB
+from benchmarks import benchmark_list
+from scripts.utils.settings import X_MAX_GLOBAL, X_MIN_GLOBAL, Y_MAX_GLOBAL, Y_MIN_GLOBAL
 
 if __name__ == "__main__":
-    runner = BenchmarkRunner(ORIGINAL_DB)
     generator = RectangleGenerator((X_MIN_GLOBAL, X_MAX_GLOBAL), (Y_MIN_GLOBAL, Y_MAX_GLOBAL))
     saver = ResultsSaver()
 
-    for rect in generator.generate_rectangles(count=100, min_size=1000, max_size=50000):
-        try:
-            result = runner.run_query(*rect.to_bounds(), repeat=20)
-            saver.add_result(result)
-        except Exception as e:
-            print(f"Error processing rectangle {rect}: {e}")
+    for benchmark in benchmark_list:
+        benchmark_performer = benchmark(BenchmarkRunner)
+
+        for rect in generator.generate_from_fixed_sizes():
+            try:
+                result = benchmark_performer.perform_benchmark(*rect.to_bounds(), repeat=20)
+                saver.add_result(result)
+            except Exception as e:
+                print(f"Error processing rectangle {rect}: {e}")
 
     saver.save_as_csv()
