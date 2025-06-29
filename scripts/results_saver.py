@@ -20,12 +20,12 @@ class ResultsSaver:
             return
         
         columns = list(self.results[0].keys())
-        file_exists = not os.path.isfile(self.path)
+        is_empty = not os.path.isfile(self.path) or os.stat(self.path).st_size == 0
         
         with open(self.path, mode='a', newline='', encoding='utf-8') as f:
             writer = csv.DictWriter(f, columns)
 
-            if not file_exists:
+            if not is_empty:
                 writer.writeheader()
             
             writer.writerows(self.results)
