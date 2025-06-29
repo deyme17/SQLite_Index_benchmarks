@@ -25,7 +25,7 @@ class ResultsSaver:
         with open(self.path, mode='a', newline='', encoding='utf-8') as f:
             writer = csv.DictWriter(f, columns)
 
-            if not is_empty:
+            if is_empty:
                 writer.writeheader()
             
             writer.writerows(self.results)
