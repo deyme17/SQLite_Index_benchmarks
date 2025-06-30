@@ -4,7 +4,7 @@ class IntersectBenchmark(BenchmarkInterface):
     @classmethod
     def get_benchmark_name(cls) -> str:
         """Returns unique benchmark identifier."""
-        return 'intersect_benchmark'
+        return 'intersect'
     
     def _get_db_path(self) -> str:
         return "db/double_index.db"

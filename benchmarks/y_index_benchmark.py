@@ -5,7 +5,7 @@ class YIndexBenchmark(BenchmarkInterface):
     @classmethod
     def get_benchmark_name(cls) -> str:
         """Returns unique benchmark identifier."""
-        return 'y_index_benchmark'
+        return 'y_index'
 
     def _get_db_path(self) -> str:
         """Returns path to database with Y-indexed data."""

@@ -4,6 +4,9 @@ from scripts.results_saver import ResultsSaver
 from benchmarks import benchmark_list
 from scripts.utils.settings import X_MAX_GLOBAL, X_MIN_GLOBAL, Y_MAX_GLOBAL, Y_MIN_GLOBAL
 
+import sys
+import getopt
+
 
 def run_benchmarks(benchmark_list, detailed=False, repeat=20):
     """
@@ -41,4 +44,34 @@ def run_benchmarks(benchmark_list, detailed=False, repeat=20):
 
 # main section
 if __name__ == "__main__":
+    detailed = False
+    repeat = 20
+    
+    # parse args
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "dhr:", ["detailed", "help", "repeat="])
+    except getopt.GetoptError as err:
+        print(f"Error: {err}")
+        print("Use --help for usage hint")
+        sys.exit(1)
+    
+    for opt, arg in opts:
+        if opt in ("-d", "--detailed"):
+            detailed = True
+
+        elif opt in ("-r", "--repeat"):
+            try:
+                repeat = int(arg)
+            except ValueError:
+                print(f"Error: Invalid repeat value '{arg}'. Must be an integer.")
+                sys.exit(1)
+                
+        elif opt in ("-h", "--help"):
+            print("Usage: python main.py [args]")
+            print("args:")
+            print("  -d, --detailed     Enable detailed mode")
+            print("  -r, --repeat N     Set number of repetitions (default: 20)")
+            print("  -h, --help         Show this help message")
+            sys.exit(0)
+
     run_benchmarks(benchmark_list=benchmark_list, detailed=True, repeat=20)

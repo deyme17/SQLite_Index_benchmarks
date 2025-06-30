@@ -4,7 +4,7 @@ class NoIndexBenchmark(BenchmarkInterface):
     @classmethod
     def get_benchmark_name(cls) -> str:
         """Returns unique benchmark identifier."""
-        return 'no_index_benchmark'
+        return 'no_index'
     
     def _get_db_path(self) -> str:
         return "db/no_index.db"

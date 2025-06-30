@@ -4,7 +4,7 @@ class CompoundIndexBenchmark(BenchmarkInterface):
     @classmethod
     def get_benchmark_name(cls) -> str:
         """Returns unique benchmark identifier."""
-        return 'compound_index_benchmark'
+        return 'comp_index'
     
     def _get_db_path(self) -> str:
         return "db/compound_index.db"

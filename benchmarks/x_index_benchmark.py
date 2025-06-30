@@ -4,7 +4,7 @@ class XIndexBenchmark(BenchmarkInterface):
     @classmethod
     def get_benchmark_name(cls) -> str:
         """Returns unique benchmark identifier."""
-        return 'x_index_benchmark'
+        return 'x_index'
     
     def _get_db_path(self) -> str:
         return "db/single_index_x.db"
