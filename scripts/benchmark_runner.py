@@ -26,9 +26,8 @@ class BenchmarkRunner:
         params = [x_min, x_max, y_min, y_max]
         return self._execute_benchmark(query, params, x_min, x_max, y_min, y_max, repeat)
     
-    def run_custom_query(self, query: str, x_min: float, x_max: float, y_min: float, y_max: float, repeat: int = 1) -> dict:
+    def run_custom_query(self, query: str, params: list, x_min: float, x_max: float, y_min: float, y_max: float, repeat: int = 1) -> dict:
         """Run a custom SQL query with given parameters and bounding box metadata."""
-        params = [x_min, x_max, y_min, y_max]
         return self._execute_benchmark(query, params, x_min, x_max, y_min, y_max, repeat)
 
     def _execute_benchmark(self, 

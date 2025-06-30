@@ -140,7 +140,8 @@ class TestBenchmarkRunner:
         y_min = self.y_min + (self.y_max - self.y_min) * 0.1
         y_max = self.y_min + (self.y_max - self.y_min) * 0.2
 
-        result = self.runner.run_custom_query(query, x_min, x_max, y_min, y_max, repeat=2)
+        params = [x_min, x_max, y_min, y_max]
+        result = self.runner.run_custom_query(query, params, x_min, x_max, y_min, y_max, repeat=2)
 
         assert isinstance(result, dict)
         assert result["x_min"] == x_min
