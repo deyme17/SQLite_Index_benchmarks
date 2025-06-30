@@ -6,10 +6,10 @@ from scripts.utils.settings import X_MAX_GLOBAL, X_MIN_GLOBAL, Y_MAX_GLOBAL, Y_M
 
 if __name__ == "__main__":
     generator = RectangleGenerator((X_MIN_GLOBAL, X_MAX_GLOBAL), (Y_MIN_GLOBAL, Y_MAX_GLOBAL))
-    saver = ResultsSaver()
 
     for benchmark in benchmark_list:
         benchmark_performer = benchmark(BenchmarkRunner)
+        saver = ResultsSaver(path=f"results/{benchmark_performer.get_benchmark_name()}_result.csv")
 
         for rect in generator.generate_from_fixed_sizes():
             try:
@@ -18,4 +18,4 @@ if __name__ == "__main__":
             except Exception as e:
                 print(f"Error processing rectangle {rect}: {e}")
 
-    saver.save_as_csv()
+        saver.save_as_csv()
