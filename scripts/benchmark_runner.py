@@ -6,7 +6,8 @@ class BenchmarkRunner:
     def __init__(self, db_path: str):
         self.db_path = db_path
 
-    def run_query(self, x_min: float, x_max: float, y_min: float, y_max: float, repeat: int = 1) -> dict:
+    def run_default_query(self, x_min: float, x_max: float, y_min: float, y_max: float, repeat: int = 1) -> dict:
+        """Run a basic SELECT query with bounding box filtering on x and y columns."""
         query = """
             SELECT * FROM sgmstr 
             WHERE x > ? AND x < ? 
@@ -16,11 +17,17 @@ class BenchmarkRunner:
         return self._execute_benchmark(query, params, x_min, x_max, y_min, y_max, repeat)
 
     def run_intersect_query(self, x_min: float, x_max: float, y_min: float, y_max: float, repeat: int = 1) -> dict:
+        """Run a SELECT query using INTERSECT between x and y filters."""
         query = """
             SELECT * FROM sgmstr WHERE x > ? AND x < ?
             INTERSECT
             SELECT * FROM sgmstr WHERE y > ? AND y < ?
         """
+        params = [x_min, x_max, y_min, y_max]
+        return self._execute_benchmark(query, params, x_min, x_max, y_min, y_max, repeat)
+    
+    def run_custom_query(self, query: str, x_min: float, x_max: float, y_min: float, y_max: float, repeat: int = 1) -> dict:
+        """Run a custom SQL query with given parameters and bounding box metadata."""
         params = [x_min, x_max, y_min, y_max]
         return self._execute_benchmark(query, params, x_min, x_max, y_min, y_max, repeat)
 

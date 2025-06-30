@@ -48,13 +48,13 @@ class TestBenchmarkRunner:
     def test_close_connection_with_none(self):
         self.runner._close_connection(None)
 
-    def test_run_query_basic(self):
+    def test_run_default_query_basic(self):
         x_min = self.x_min + (self.x_max - self.x_min) * 0.1
         x_max = self.x_min + (self.x_max - self.x_min) * 0.2
         y_min = self.y_min + (self.y_max - self.y_min) * 0.1
         y_max = self.y_min + (self.y_max - self.y_min) * 0.2
 
-        result = self.runner.run_query(x_min, x_max, y_min, y_max, repeat=1)
+        result = self.runner.run_default_query(x_min, x_max, y_min, y_max, repeat=1)
 
         assert isinstance(result, dict)
         assert result["x_min"] == x_min
@@ -73,14 +73,14 @@ class TestBenchmarkRunner:
         assert result["execution_time_total_ms"] >= 0
         assert result["execution_time_avg_ms"] >= 0
 
-    def test_run_query_multiple_repeats(self):
+    def test_run_default_query_multiple_repeats(self):
         x_min = self.x_min + (self.x_max - self.x_min) * 0.3
         x_max = self.x_min + (self.x_max - self.x_min) * 0.4
         y_min = self.y_min + (self.y_max - self.y_min) * 0.3
         y_max = self.y_min + (self.y_max - self.y_min) * 0.4
 
         repeat = 3
-        result = self.runner.run_query(x_min, x_max, y_min, y_max, repeat=repeat)
+        result = self.runner.run_default_query(x_min, x_max, y_min, y_max, repeat=repeat)
 
         assert result["repeat"] == repeat
         assert result["row_count_total"] == result["row_count_avg"] * repeat
@@ -96,22 +96,22 @@ class TestBenchmarkRunner:
         assert isinstance(result, dict)
         assert result["repeat"] == 1
 
-        normal_result = self.runner.run_query(x_min, x_max, y_min, y_max, repeat=1)
+        normal_result = self.runner.run_default_query(x_min, x_max, y_min, y_max, repeat=1)
         assert result["row_count_total"] <= normal_result["row_count_total"]
 
-    def test_run_query_empty_result(self):
+    def test_run_default_query_empty_result(self):
         x_min = self.x_max + 1000
         x_max = self.x_max + 2000
         y_min = self.y_max + 1000
         y_max = self.y_max + 2000
 
-        result = self.runner.run_query(x_min, x_max, y_min, y_max, repeat=1)
+        result = self.runner.run_default_query(x_min, x_max, y_min, y_max, repeat=1)
         assert result["row_count_total"] == 0
         assert result["row_count_avg"] == 0
         assert result["execution_time_total_ms"] >= 0
 
-    def test_run_query_large_range(self):
-        result = self.runner.run_query(
+    def test_run_default_query_large_range(self):
+        result = self.runner.run_default_query(
             self.x_min - 1, self.x_max + 1,
             self.y_min - 1, self.y_max + 1,
             repeat=1
@@ -121,11 +121,30 @@ class TestBenchmarkRunner:
     def test_invalid_database_path(self):
         invalid_runner = BenchmarkRunner("/nonexistent/path/db.sqlite")
         with pytest.raises(sql.OperationalError):
-            invalid_runner.run_query(1.0, 2.0, 1.0, 2.0, repeat=1)
+            invalid_runner.run_default_query(1.0, 2.0, 1.0, 2.0, repeat=1)
 
     def test_query_parameter_types(self):
-        result_int = self.runner.run_query(1, 2, 1, 2, repeat=1)
-        result_float = self.runner.run_query(1.0, 2.0, 1.0, 2.0, repeat=1)
+        result_int = self.runner.run_default_query(1, 2, 1, 2, repeat=1)
+        result_float = self.runner.run_default_query(1.0, 2.0, 1.0, 2.0, repeat=1)
         assert isinstance(result_int, dict)
         assert isinstance(result_float, dict)
         assert result_int["x_min"] == result_float["x_min"]
+
+    def test_run_custom_query(self):
+        query = """
+            SELECT COUNT(*) FROM sgmstr
+            WHERE x BETWEEN ? AND ? AND y BETWEEN ? AND ?
+        """
+        x_min = self.x_min + (self.x_max - self.x_min) * 0.1
+        x_max = self.x_min + (self.x_max - self.x_min) * 0.2
+        y_min = self.y_min + (self.y_max - self.y_min) * 0.1
+        y_max = self.y_min + (self.y_max - self.y_min) * 0.2
+
+        result = self.runner.run_custom_query(query, x_min, x_max, y_min, y_max, repeat=2)
+
+        assert isinstance(result, dict)
+        assert result["x_min"] == x_min
+        assert result["x_max"] == x_max
+        assert result["repeat"] == 2
+        assert "row_count_total" in result
+        assert "execution_time_total_ms" in result
