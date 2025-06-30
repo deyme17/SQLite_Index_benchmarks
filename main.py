@@ -18,8 +18,10 @@ def run_benchmarks(benchmark_list, detailed=False, repeat=20):
 
     for benchmark in benchmark_list:
         benchmark_performer = benchmark(BenchmarkRunner)
-        suffix = "_dt" if detailed else "_agg" # _dt - detailed; _agg - aggregated
-        saver = ResultsSaver(path=f"results/{benchmark_performer.get_benchmark_name()}{suffix}_res.csv")
+
+        suffix = "_det" if detailed else "_agg" # _dt - detailed; _agg - aggregated
+        benchmark_name = benchmark_performer.get_benchmark_name()
+        saver = ResultsSaver(path=f"results/{benchmark_name}{suffix}_res.csv")
 
         for rect in generator.generate_from_fixed_sizes():
             try:
