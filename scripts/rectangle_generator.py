@@ -22,26 +22,50 @@ class RectangleGenerator:
             (200000, 150000), (400000, 300000), (800000, 600000)
         ]
 
-    def generate_rectangles(self, count: int = 10, min_size: int = 1000, max_size: int = 50000) -> List[Rectangle]:
-        """Generates a list of Rectangle objects with valid random bounds."""
+    def generate_rectangles_from_ratios(self, ratios: List[Tuple[int, int]] = None, count: int = 1, min_size: int = 1000, max_size: int = 50000) -> List[Rectangle]:
+        """
+        Generates rectangles based on aspect ratios.
+        Args:
+            ratios: Optional list of (width_ratio, height_ratio) tuples.
+                    If not provided, default aspect ratios will be used.
+            count: Number of rectangles to generate for each ratio.
+            min_size: Minimum width of the generated rectangles.
+            max_size: Maximum width of the generated rectangles.
+        Return: 
+            List of generated Rectangle objects.
+        """
+        aspect_ratios = self.aspect_ratios if ratios is None else ratios
         rectangles = []
 
-        for _ in range(count):
-            x_aspect, y_aspect = rnd.choice(self.aspect_ratios)
-            width = rnd.randint(min_size, max_size)
-            height = int(width * y_aspect / x_aspect)
+        for curr_ratio in aspect_ratios:
+            for _ in range(count):
+                x_aspect, y_aspect = curr_ratio
+                if x_aspect == 0:
+                    print(f"Invalid aspect ratio: ({x_aspect}, {y_aspect}), skipping.")
+                    continue
 
-            rectangle = self._generate_rectangle(width, height)
-            if rectangle is None:
-                continue
-            
-            rectangles.append(rectangle)
+                width = rnd.randint(min_size, max_size)
+                height = int(width * y_aspect / x_aspect)
+
+                rectangle = self._generate_rectangle(width, height)
+                if rectangle is None:
+                    continue
+                
+                rectangles.append(rectangle)
 
         return rectangles
 
-    def generate_from_fixed_sizes(self, shuffle: bool = False) -> List[Rectangle]:
-        """Generates rectangles with fixed sizes."""
-        sizes = self.fixed_sizes[:]
+    def generate_from_fixed_sizes(self, sizes: List[Tuple[int, int]] = None, shuffle: bool = False) -> List[Rectangle]:
+        """
+        Generates rectangles using fixed predefined sizes.
+        Args:
+            sizes: Optional list of (width, height) tuples. 
+                   If not provided, default fixed sizes will be used.
+            shuffle: If True, randomly shuffle the order of sizes before generation.
+        Return:
+            List of generated Rectangle objects.
+        """
+        sizes = self.fixed_sizes[:] if sizes is None else sizes
         if shuffle:
             rnd.shuffle(sizes)
 
