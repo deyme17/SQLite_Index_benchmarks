@@ -74,4 +74,4 @@ if __name__ == "__main__":
             print("  -h, --help         Show this help message")
             sys.exit(0)
 
-    run_benchmarks(benchmark_list=benchmark_list, detailed=True, repeat=20)
+    run_benchmarks(benchmark_list=benchmark_list, detailed=detailed, repeat=20)
