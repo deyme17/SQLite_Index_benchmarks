@@ -1,6 +1,5 @@
 from benchmarks.benchmark_interface import BenchmarkInterface
 
-
 class YIndexBenchmark(BenchmarkInterface):
     @classmethod
     def get_benchmark_name(cls) -> str:
