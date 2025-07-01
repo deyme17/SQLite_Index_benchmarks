@@ -14,5 +14,5 @@ class BenchmarkInterface(ABC):
         pass
     
     @abstractmethod
-    def perform_benchmark(self, x_min, x_max, y_min, y_max, repeat=1):
+    def perform_benchmark(self, x_min, x_max, y_min, y_max, repeat=5, aggregate=False):
         pass
