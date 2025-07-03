@@ -24,7 +24,7 @@ def run_benchmarks(benchmark_list, aggregate=False, repeat=20):
 
         dir_name = "aggregated" if aggregate else "individual"
         benchmark_name = benchmark_performer.get_benchmark_name()
-        saver = ResultsSaver(path=f"results/{dir_name}/{benchmark_name}_result.csv")
+        saver = ResultsSaver(path=f"results/data/{dir_name}/{benchmark_name}_result.csv")
 
         for rect in generator.generate_from_fixed_sizes():
             try:
