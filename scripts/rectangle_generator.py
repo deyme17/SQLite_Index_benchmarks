@@ -22,7 +22,7 @@ class RectangleGenerator:
             (200000, 150000), (400000, 300000), (800000, 600000)
         ]
 
-    def generate_rectangles_from_ratios(self, ratios: List[Tuple[int, int]] = None, count: int = 1, min_size: int = 1000, max_size: int = 50000) -> List[Rectangle]:
+    def generate_from_ratios(self, ratios: List[Tuple[int, int]] = None, count: int = 1, min_size: int = 1000, max_size: int = 50000) -> List[Rectangle]:
         """
         Generates rectangles based on aspect ratios.
         Args:
@@ -79,7 +79,7 @@ class RectangleGenerator:
 
         return rectangles
 
-    def _generate_rectangle(self, width: int, height: int) -> Rectangle|None:
+    def _generate_rectangle(self, width: int, height: int) -> Rectangle:
         """Generates a single rectangle with specified width and height."""
         max_x_start = self.x_max_global - width
         max_y_start = self.y_max_global - height

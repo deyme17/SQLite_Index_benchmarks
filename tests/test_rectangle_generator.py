@@ -19,14 +19,14 @@ class TestRectangleGenerator:
 
     def test_generate_rectangle_count(self):
         count_per_ratio = 5
-        rectangles = self.generator.generate_rectangles_from_ratios(count=count_per_ratio)
+        rectangles = self.generator.generate_from_ratios(count=count_per_ratio)
         expected_count = count_per_ratio * len(self.generator.aspect_ratios)
         assert len(rectangles) == expected_count
         for rect in rectangles:
             assert isinstance(rect, Rectangle)
 
     def test_rectangles_within_bounds(self):
-        rectangles = self.generator.generate_rectangles_from_ratios(count=10)
+        rectangles = self.generator.generate_from_ratios(count=10)
         for rect in rectangles:
             assert self.x_range[0] <= rect.min_x < rect.max_x <= self.x_range[1]
             assert self.y_range[0] <= rect.min_y < rect.max_y <= self.y_range[1]
@@ -34,7 +34,7 @@ class TestRectangleGenerator:
 
     def test_aspect_ratio_is_reasonable(self):
         expected_ratios = {round(w / h, 2) for w, h in self.generator.aspect_ratios}
-        rectangles = self.generator.generate_rectangles_from_ratios(count=5)
+        rectangles = self.generator.generate_from_ratios(count=5)
         for rect in rectangles:
             # avoid ZeroDivisionError
             if rect.height > 0:
